@@ -157,7 +157,7 @@ jupyter-console==5.2.0
 jupyter-core==4.4.0
 jupyter==1.0.0
 jupyterhub-ldapauthenticator==1.2.2
-jupyterhub==0.9.4
+jupyterhub==0.9.6
 jupyterlab-launcher==0.13.1
 jupyterlab==0.34.9
 keyring==13.2.1
