@@ -46,13 +46,6 @@ class Contexts:
         self.window_size = window_size
         self.randomized = randomized
 
-        # word_queries = [
-        #     f"'% {self.word} %'",
-        #     f"'{self.word}'",
-        #     f"'% {self.word}'",
-        #     f"'{self.word} %'",
-        # ]  # all possible forms of spacing
-
         # select random rows or rows ordered by ID
         randomized_query = "ORDER BY RANDOM()" if self.randomized else "ORDER BY id"
 
@@ -62,15 +55,6 @@ class Contexts:
         while continue_condition:
             buffer_count = i * 500
 
-            # docs_containing_word = pd.read_sql_query(
-            #     f"SELECT * FROM {self.db_table} \
-            #         WHERE {self.db_table_col} LIKE {word_queries[0]} \
-            #         OR {self.db_table_col} LIKE {word_queries[1]} \
-            #         OR {self.db_table_col} LIKE {word_queries[2]} \
-            #         OR {self.db_table_col} LIKE {word_queries[3]} {randomized_query} \
-            #         LIMIT {num_contexts + buffer_count}",
-            #     self.corpus_db,
-            # )
             docs_containing_word = pd.read_sql_query(
                 f"SELECT * FROM {self.db_table} \
                     WHERE {self.db_table_col} LIKE '%{self.word}%' \
@@ -93,7 +77,6 @@ class Contexts:
                     word_contexts.append(utterance)
 
             i += 1
-            # print(f"# Fetching more contexts round {i}...")
 
             # stop when finally have enough contexts, or after a certain number of loops
             if (len(word_contexts) >= num_contexts) or (
@@ -110,9 +93,8 @@ class Contexts:
 
     def get_sentence_window(self, nlp, utterance, word):
         """
-        Params:
-        utterance : document as str
-        word : target word
+        @param utterance document as str
+        @param word target word
 
         Returns:
             list of sentences (str) that contain the word
@@ -134,10 +116,9 @@ class Contexts:
 
     def get_window(self, nlp, utterance, word, window_size):
         """
-        Params:
-        utterance : document as str
-        word : target word
-        window_size : window +/- word to capture
+        @param utterance document as str
+        @param word target word
+        @param window_size window +/- word to capture
 
         Returns:
             List of str (word in context). If word occurs multiple times in text,
@@ -205,8 +186,6 @@ class LabeledContexts:
 ############################################
 # Utils that handle Contexts objects
 ############################################
-
-
 def get_corpus_top_words(ContextsObj, num_words):
     """
     Returns dictionary of most frequent words (not including punctuation

@@ -37,9 +37,10 @@ from transformembeddings import ContextEmbeddings
 ############################################################
 # Plot: PCA
 ############################################################
-
-
 def plot_decomposed_embeddings(ce_object):
+    """
+    @param ce_object ContextEmbeddings object
+    """
     if ce_object.decomp_dims == 2:
         fig, ax = plt.subplots(figsize=(10, 8))
 
@@ -87,13 +88,13 @@ def plot_scree_PCA(ce_object):
 ##############################
 # Visualizing and inspecting cluster quality
 ##############################
-
-
 def compute_silhouette(ce_object, use_decomposed):
     """
+    @param ce_object ContextEmbeddings object
+    @param use_decomposed boolean to use decomposed or raw vector representations
+
     Computes mean silhouette score and silhouette score by cluster
     Helper function for cluster_and_silhouette()
-
     """
     if use_decomposed:
         vecs_df = ce_object.decomposed_embedding_representation
@@ -115,10 +116,11 @@ def compute_silhouette(ce_object, use_decomposed):
 
 def print_cluster_examples(ce_object, num_print=10):
     """
-    num_print : (max) number of contexts to print per cluster
+    @param ce_object ContextEmbeddings object
+    @param num_print (max) number of contexts to print per cluster
 
     Returns:
-        prints example word contexts per cluster/dimension
+    prints example word contexts per cluster/dimension
     """
     if ce_object.decomp_method:
         decomposed = ce_object.decomposed_embedding_representation
@@ -137,12 +139,13 @@ def print_cluster_examples(ce_object, num_print=10):
 ############################################################
 
 
-def plot_labeled_data(ce_object, mpl=True):
+def plot_labeled_data(ce_object):
     """
+    @param ce_object ContextEmbeddings object
     Plots decomposed data in 2D with colors representing hand labeled clusters
 
     Returns:
-        Plots interactive figure with points colored by hand-coded label
+    Plots interactive figure with points colored by hand-coded label
     """
     if not ce_object.true_labels:
         print("Can't plot without true data labels!")
@@ -183,9 +186,9 @@ def plot_labeled_data(ce_object, mpl=True):
 
 def evaluate_cluster_quality(ce_object):
     """
+    @param ce_object ContextEmbeddings object
     Given ground truth labels, performs clustering of vector representations of a word
     (after optionally decomposing vector representations) and compares predicted and true labels.
-
     """
     print(
         f"Using {ce_object.cluster_method} with k={ce_object.num_clusters},\n \
@@ -215,6 +218,9 @@ def evaluate_cluster_quality(ce_object):
 
 def optimize_mapping_cm(true_labels, predicted_labels):
     """
+    @param true_labels true labels corresponding to which word sense is being used
+    @param predicted_labels predicted labels corresponding to which word sense is being used
+
     Helper function that finds the best mapping of predicted_labels (which have no meaning)
     to true_labels (which were hand coded)
     """
@@ -249,11 +255,13 @@ def optimize_mapping_cm(true_labels, predicted_labels):
 
 def get_centroids(ce_object):
     """
+    @param ce_object ContextEmbeddings object
+
     Given hand labeled cluster assignments (optionally decomposed), return cluster centroid.
     Helper function to be called in find_contexts_neighboring_centroid()
 
     Returns:
-        numpy array of representations of centroids
+    numpy array of representations of centroids
     """
 
     if ce_object.decomp_method:
@@ -271,10 +279,11 @@ def get_centroids(ce_object):
 
 def find_contexts_neighboring_centroid(ce_object, num_neighbors=20):
     """
+    @param ce_object ContextEmbeddings object
+    @param num_neighbors number of neighbors to return, default = 20
+
     Given a set of word contexts with cluster labels,
     stores the n closest contexts to each cluster centroid.
-
-        num_neighbors : number of neighbors to return, default = 20
     """
     cluster_centroids = get_centroids(ce_object)
 
@@ -310,10 +319,16 @@ def find_contexts_neighboring_centroid(ce_object, num_neighbors=20):
 
 def rank_words_near_centroid(ce_object, num_words, tf_idf_weight=False):
     """
-        centroids_top_words is a Dict{keys = centroid numbers,
+    @param ce_object ContextEmbeddings object
+    @param num_words number of words to print near each centroid
+    @param tf_idf_weight weight the tokens for ranking, default is False
+
+    Returns:
+    centroids_top_words is a Dict{
+        keys = centroid numbers,
         values = dataframe of words near that centroid in descending order}
 
-        Excludes punctuation and stopwords
+    Excludes punctuation and stopwords
     """
 
     contexts_near_centroids, context_near_centroids_tf_idf_dicts = find_contexts_neighboring_centroid(
@@ -358,8 +373,9 @@ def rank_words_near_centroid(ce_object, num_words, tf_idf_weight=False):
 
 def print_centroid_top_words(ce_object, centroid_num=None, num_words=5):
     """
-    centroid : the centroid for which the top words will be obtained. If none, print for all centroids.
-    num_words : number of words to return
+    @param ce_object ContextEmbeddings object
+    @param centroid the centroid for which the top words will be obtained. If none, print for all centroids.
+    @param num_words number of words to return, default is 5
     """
     centroids_top_words = rank_words_near_centroid(ce_object)
     if centroid_num:
@@ -378,92 +394,8 @@ def print_centroid_top_words(ce_object, centroid_num=None, num_words=5):
 
 
 ############################################################
-# BGM utils
-############################################################
-
-
-def BGM_search_k(
-    ce_object,
-    n_components_lim,
-    use_decomposed=False,
-    additional_params={"random_state": 0},
-    cluster_with=False,
-):
-    """
-    Fits BGM models with up to n_components_lim and returns visualizations of the results.
-    Sets modal number of actual components in self.BGM_modal_k and optionally runs cluster_embeddings() with modal k.
-
-    @param additional_params {param_name: value} of parameters accepted by the sklearn clustering function.
-        Cannot include n_components.
-    @param cluster_with if True, automatically runs cluster_embeddings with the modal k
-    """
-    ks = np.linspace(2, n_components_lim, n_components_lim - 1)
-
-    vec = (
-        ce_object.decomposed_embedding_representation
-        if use_decomposed
-        else ce_object.embedding_representation
-    )
-
-    bgms = [
-        BayesianGaussianMixture(n_components=int(k), **additional_params) for k in ks
-    ]
-
-    results = []
-
-    for bgm in bgms:
-        bgm.fit(vec)
-        results.append((bgm.n_components, len(set(bgm.predict(vec)))))
-
-    results = pd.DataFrame(results)
-    results.columns = ["max_n_components", "actual_n_components"]
-
-    BGM_modal_k = mode(results["actual_n_components"]).mode[0]
-
-    if cluster_with:
-        clustered = ce_object.cluster_embeddings(
-            cluster_method="BayesGaussMix",
-            num_clusters=BGM_modal_k,
-            use_decomposed=use_decomposed,
-            additional_params=additional_params,
-        )
-
-    fig, (plt1, plt2) = plt.subplots(ncols=2, figsize=(14, 6))
-    results.plot.scatter(
-        y="actual_n_components",
-        x="max_n_components",
-        ax=plt1,
-        title="Actual components selected when n max components allowed",
-        xticks=range(max(results.max_n_components)),
-        yticks=range(max(results.actual_n_components)),
-    )
-    results.plot.hist(
-        y="actual_n_components",
-        ax=plt2,
-        title="Histogram of components selected",
-        xticks=range(max(results.actual_n_components)),
-    )
-
-    return BGM_modal_k
-
-
-############################################################
 # Utils
 ############################################################
-
-
-def compare_decomp_methods(transformed_embedding, decomp_dims=2):
-    """
-    Decompose and plot labeled data with each of the decomp methods.
-    """
-    if decomp_dims == 2:
-        for cluster_method in ["PCA", "UMAP", "TSNE"]:
-            transformed_embedding.decompose_embeddings(cluster_method, decomp_dims)
-            transformed_embedding.plot_labeled_data()
-    else:
-        print("Decomp dimensions must == 2 to plot.")
-
-
 def compare_silhouettes(
     transformed_embedding, cluster_method, cluster_values, use_decomposed
 ):

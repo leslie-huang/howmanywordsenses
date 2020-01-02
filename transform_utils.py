@@ -83,7 +83,6 @@ def find_PCA_threshold(
 def compute_subtract_context(
     subtract_context, target_rep, context_token_reps_excl_target
 ):
-
     # sum over context minus target word
     sum_context_without_target = np.sum(context_token_reps_excl_target, axis=0)
 
@@ -162,6 +161,7 @@ def get_elmo_token_rep(
     """
     Get a word's ELMo representation, and optionally weight it using tf-idf.
     """
+
     token_rep = raw_elmo_rep[:, token_idx, :]  # 3x1024
 
     # average the 3 layers
