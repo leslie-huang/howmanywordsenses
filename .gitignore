@@ -1,2 +1,4 @@
 .mypy_cache
 .ipynb_checkpoints
+uncased_L-12_H-768_A-12/
+__pycache__/
