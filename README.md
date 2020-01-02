@@ -1,21 +1,28 @@
 # How Many Word Senses
 
 Leslie Huang (lesliehuang@nyu.edu)
+
 Kyunghyun Cho
+
 Sam Bowman
 
 This repository contains code for unsupervised estimation of the number of word senses from word contexts extracted from pretrained BERT, ELMo, and fastText models.
 
+Read about what we did: [link to Medium]
+
 # ⚠️ Warning: this code is (at best) in alpha mode. ⚠️
 
-Because our experiments yielded a null result, we have no plans to make this code "camera ready."
-
+Because our experiments yielded a null result, we have no plans to make this code "camera ready." With our apologies, the documentation is incomplete.
 
 For a demo, see the `Sentence_labeled_example.ipynb`, which demonstrates how to extract contexts, compute the vector representations, and visualize the results.
 
 ## Contents
 
-- All the main functionality is in the `.py` scripts located in the root of this directory. With our apologies, the documentation is incomplete.
+- All the main functionality is in the `.py` scripts located in the root of this directory.
+  - Note that `pytorch_extract_features.py` is from https://github.com/huggingface/.
+
+
+- Software requirements are in `requirements.txt`.
 
 - `Sentence_labeled_example.ipynb` is a walk through with a manually labeled example.
 
