@@ -13,7 +13,7 @@ Jinja2==2.10.1
 Mako==1.0.7
 MarkupSafe==1.1.0
 MarkupSafe==1.1.1
-Pillow==5.2.0
+Pillow==6.2.0
 PyDictionary==1.5.2
 PyMySQL==0.8.0
 PySocks==1.6.8
