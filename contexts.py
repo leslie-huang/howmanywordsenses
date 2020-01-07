@@ -14,7 +14,13 @@ from itertools import chain
 
 class Contexts:
     def __init__(self, corpus_db, word, db_table, db_table_col):
-        self.corpus_db = corpus_db  # corpus as SQL database
+        """
+        @param corpus_db path to corpus as SQL database
+        @param word target word
+        @param db_table name of the database table
+        @param db_table_col name of database table column containing text
+        """
+        self.corpus_db = corpus_db
         self.db_table = db_table
         self.db_table_col = db_table_col
         self.corpus_size = pd.read_sql_query(
@@ -37,6 +43,11 @@ class Contexts:
 
     def select_contexts(self, context_type, window_size, num_contexts, randomized):
         """
+        @param context_type sentence or window
+        @param window_size if context_type is window, window_size should be a positive nonzero integer
+        @param num_contexts (maximum) number of contexts to retrieve
+        @param randomized retrieve random contexts from the database
+
         This method sets all attributes related to selecting raw word contexts from the corpus.
         Its side effect is to populate self.contexts
         """
@@ -93,6 +104,7 @@ class Contexts:
 
     def get_sentence_window(self, nlp, utterance, word):
         """
+        @param nlp Spacy NLP
         @param utterance document as str
         @param word target word
 
@@ -160,7 +172,8 @@ class LabeledContexts:
 
     def __init__(self, file_path, context_data):
         """
-        context_data accepts either a Contexts instance or a dict of the necessary attributes
+        @param file_path path to labeled context data
+        @param context_data accepts either a Contexts instance or a dict of the necessary attributes
         """
 
         if isinstance(context_data, Contexts):
@@ -188,6 +201,9 @@ class LabeledContexts:
 ############################################
 def get_corpus_top_words(ContextsObj, num_words):
     """
+    @param ContextsObj Contexts object
+    @param num_words number of top words to return
+
     Returns dictionary of most frequent words (not including punctuation
     or numbers) in a Contexts object
     """

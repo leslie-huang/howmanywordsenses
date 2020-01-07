@@ -10,6 +10,12 @@ from subprocess import check_call
 
 
 def tf_idf_weight(spacy_contexts):
+    """
+    @param spacy_contexts Spacy-fied contexts
+
+    Returns List of dictionaries, each dictionary corresponds to one document and
+    contains words and their tf-idf weights
+    """
     docs_dict = Dictionary(spacy_contexts)
     docs_dict.compactify()
 
@@ -34,6 +40,9 @@ def tf_idf_weight(spacy_contexts):
 
 def get_top_words(ce_object, num_words=100):
     """
+    @param ce_object ContextEmbeddings object
+    @param num_words number of most frequent words to return
+
     Returns the most frequent words across the entire ContextEmbedding.
     Note that random_mask and exclude_word are applied BEFORE this.
     """
@@ -56,7 +65,9 @@ def find_PCA_threshold(
     embedding_representation, additional_params={}, pct_variance_explained=0.99
 ):
     """
+    @param embedding_representation raw or decomposed embedding representation
     @param additional_params Additional parameters to pass to sklearn PCA function. Cannot include n_components.
+    @pct_variance_explained Minimum threshold for percent of variance explained
     """
     full_model = PCA(**additional_params)
     full_model.fit(embedding_representation)
@@ -83,6 +94,12 @@ def find_PCA_threshold(
 def compute_subtract_context(
     subtract_context, target_rep, context_token_reps_excl_target
 ):
+    """
+    @param subtract_context boolean
+    @param target_rep representation of the target word
+    @param context_token_reps_excl_target representation of the tokens in the context
+    besides the target word
+    """
     # sum over context minus target word
     sum_context_without_target = np.sum(context_token_reps_excl_target, axis=0)
 
@@ -102,6 +119,12 @@ def compute_subtract_context(
 
 def get_ft_token_rep(token, ft_model, tf_idf_weighting, tf_idf_dicts, i):
     """
+    @param token current token (word)
+    @param ft_model fastText model
+    @param tf_idf_weighting boolean for applying tf-idf
+    @param tf_idf_dicts tf_idf dictionaries corresponding with the document
+    @param i index
+
     Get a word's fastText representation, and optionally weight it using tf-idf.
     """
     raw_word_vec = ft_model.get_word_vector(token)
@@ -127,6 +150,14 @@ def compute_ft_tokenized_rep(
     subtract_context,
 ):
     """
+    @param tokenized_context tokenized context
+    @param target_word target word in the context
+    @param ft_model fastText model
+    @param tf_idf_weighting boolean for applying tf-idf
+    @param tf_idf_dicts tf_idf dictionaries corresponding with the document
+    @param i index
+    @param subtract_context boolean
+
     Manually get_sentence_vector (with optional tf-idf weighting):
     get_word_vector for each word, divide the word_vec by its L2 norm
     multiply the normalized word_vec by the word's tf-idf weight from doc_tfidf_dicts
@@ -159,6 +190,12 @@ def get_elmo_token_rep(
     token, token_idx, raw_elmo_rep, tf_idf_weighting, tf_idf_dicts, context_idx
 ):
     """
+    @param target_word target word in the context
+    @param ft_model fastText model
+    @param tf_idf_weighting boolean for applying tf-idf
+    @param tf_idf_dicts tf_idf dictionaries corresponding with the document
+    @param i index
+
     Get a word's ELMo representation, and optionally weight it using tf-idf.
     """
 
@@ -184,6 +221,14 @@ def compute_elmo_tokenized_rep(
     subtract_context,
 ):
     """
+    @param tokenized_context tokenized context
+    @param target_word target word in the context
+    @param raw_elmo_rep raw output from ELMO
+    @param tf_idf_weighting boolean for applying tf-idf
+    @param tf_idf_dicts tf_idf dictionaries corresponding with the document
+    @param context_idx index of this context
+    @param subtract_context boolean
+
     for each line, extract features and their vector representations (1 per hidden layer)
     for each context, enumerate through the words,
     average the 3 layers,
@@ -222,6 +267,9 @@ def compute_elmo_tokenized_rep(
 
 def get_raw_bert_rep(bert_path, spacy_contexts):
     """
+    @bert_path filepath of pretrained BERT model
+    @param spacy_contexts Spacy-fied contexts
+
     Run pytorch_extract_features.py to get raw BERT representation of contexts.
     """
     # write word contexts to tmp input file
@@ -257,6 +305,16 @@ def get_raw_bert_rep(bert_path, spacy_contexts):
 def get_bert_token_rep(
     token, feature, tf_idf_weighting, tf_idf_dicts, context_idx, bert_cls=False
 ):
+    """
+    @param token current token (word)
+    @param feature raw BERT feature
+    @param tf_idf_weighting boolean for applying tf-idf
+    @param tf_idf_dicts tf_idf dictionaries corresponding with the document
+    @param context_idx index of this context
+    @param bert_cls boolean for whether to concatenate BERT "CLS" token with representation
+
+    Compute BERT representation
+    """
 
     t_vals = [feature["layers"][j]["values"] for j in range(len(feature["layers"]))]
 
@@ -285,6 +343,17 @@ def compute_bert_tokenized_rep(
     subtract_context,
     bert_cls,
 ):
+    """
+    @param context context as string
+    @param target_word target word in the context
+    @param raw_bert raw BERT representation for the entire context
+    @param tf_idf_weighting boolean for applying tf-idf
+    @param tf_idf_dicts tf_idf dictionaries corresponding with the document
+    @param subtract_context boolean
+    @param context_idx index of this context
+    @param bert_cls boolean for whether to concatenate BERT "CLS" token with representation
+    """
+
     if bert_cls:
         excluded_features = ["SEP]"]
     else:
