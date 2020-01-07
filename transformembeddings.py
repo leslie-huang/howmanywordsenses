@@ -45,6 +45,15 @@ class ContextEmbeddings:
         drop_punct=False,
         bert_cls=False,
     ):
+    """
+    @param ContextsObj a Contexts object
+    @param tf_idf_weighting boolean, whether to apply tf-idf weighting in calculating representations
+    @param mask_pct percent of random masking. None if no masking
+    @param exclude_word boolean, whether to exclude target word from the contexts
+    @param drop_punct boolean, whether to drop punctuation from contexts
+    @param bert_cls boolean, whether to use BERT 'CLS' token
+    """
+
         self.word = ContextsObj.word
         self.num_contexts = ContextsObj.num_contexts
         self.contexts = ContextsObj.contexts  # the full contexts
@@ -161,6 +170,14 @@ class ContextEmbeddings:
         """
         This method populates self.embedding_representation with the vector representations
         from one chosen embedding model.
+
+        @param embedding_type embedding model to use, one of {BERT, ELMO, fastText}
+        @param use_pkl boolean, True if loading saved embeddings from .pkl
+        @param pkl_path path to .pkl file, or None if no pickle
+        @param bert_path path to pretrained BERT model
+        @param ft_path path to pretrained fastText model
+        @param subtract_context boolean, whether to subtract context from target when calculating representations
+        @param bert_cls boolean, whether to use BERT 'CLS' token
         """
         self.embedding_type = embedding_type
         self.subtract_context = subtract_context
@@ -282,6 +299,8 @@ class ContextEmbeddings:
         """
         Decompose raw word embeddings into lower-dimensional representation.
 
+        @param decomp_method decomposition method, one of {PCA, TSNE, UMAP}
+        @param decomp_dims number of dimensions after decomposition
         @param additional_params {param_name: value} of parameters accepted by the sklearn decomposition function.
             Cannot include n_components.
         """
@@ -319,6 +338,9 @@ class ContextEmbeddings:
         """
         Predicts cluster assignments for data points on raw or decomposed embedding representations.
 
+        @param cluster_method clustering method, one of {KMeans, Spectral, GaussianMix, BayesGaussMix}
+        @param num_clusters number of clusters
+        @param use_decomposed boolean, whether to use decomposed or raw representations
         @param additional_params {param_name: value} of parameters accepted by the sklearn clustering function.
             Cannot include n_components.
         """
