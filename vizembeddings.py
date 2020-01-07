@@ -396,20 +396,23 @@ def print_centroid_top_words(ce_object, centroid_num=None, num_words=5):
 ############################################################
 # Utils
 ############################################################
-def compare_silhouettes(
-    transformed_embedding, cluster_method, cluster_values, use_decomposed
-):
+def compare_silhouettes(ce_object, cluster_method, cluster_values, use_decomposed):
     """
+    @param ce_object ContextEmbeddings object
+    @param clustering method
+    @param cluster_values values of k for clustering
+    @param use_decomposed use decomposed instead of raw representations
+
     Comparing silhouette scores across
     multiple ContextEmbeddings objects
     """
 
     if use_decomposed:
-        vecs_df = transformed_embedding.decomposed_embedding_representation
+        vecs_df = ce_object.decomposed_embedding_representation
     else:
-        vecs_df = transformed_embedding.embedding_representation
+        vecs_df = ce_object.embedding_representation
 
-    clustered_with_ks = [copy.copy(transformed_embedding) for i in cluster_values]
+    clustered_with_ks = [copy.copy(ce_object) for i in cluster_values]
     for i, ncluster in enumerate(cluster_values):
         clustered_with_ks[i].cluster_embeddings(
             cluster_method, ncluster, use_decomposed
