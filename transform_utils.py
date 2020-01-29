@@ -13,7 +13,7 @@ def tf_idf_weight(spacy_contexts):
     """
     @param spacy_contexts Spacy-fied contexts
 
-    Returns List of dictionaries, each dictionary corresponds to one document and
+    Returns list of Dicts, each dictionary corresponds to one document and
     contains words and their tf-idf weights
     """
     docs_dict = Dictionary(spacy_contexts)
@@ -229,6 +229,7 @@ def compute_elmo_tokenized_rep(
     @param context_idx index of this context
     @param subtract_context boolean
 
+    Compute the tokenized ELMo representation of the context:
     for each line, extract features and their vector representations (1 per hidden layer)
     for each context, enumerate through the words,
     average the 3 layers,
@@ -313,7 +314,7 @@ def get_bert_token_rep(
     @param context_idx index of this context
     @param bert_cls boolean for whether to concatenate BERT "CLS" token with representation
 
-    Compute BERT representation
+    Compute averaged vector for a single token.
     """
 
     t_vals = [feature["layers"][j]["values"] for j in range(len(feature["layers"]))]
@@ -352,6 +353,8 @@ def compute_bert_tokenized_rep(
     @param subtract_context boolean
     @param context_idx index of this context
     @param bert_cls boolean for whether to concatenate BERT "CLS" token with representation
+
+    Compute tokenized BERT representation.
     """
 
     if bert_cls:

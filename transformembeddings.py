@@ -99,7 +99,7 @@ class ContextEmbeddings:
     ##############################
     def random_mask(self):
         """
-        randomly drop (mask) a % of words while preserving order
+        Randomly drop (mask) a % of words while preserving order
         from already-tokenized spacy_contexts
         """
         masked_docs = []
@@ -168,9 +168,6 @@ class ContextEmbeddings:
         bert_cls = False
     ):
         """
-        This method populates self.embedding_representation with the vector representations
-        from one chosen embedding model.
-
         @param embedding_type embedding model to use, one of {BERT, ELMO, fastText}
         @param use_pkl boolean, True if loading saved embeddings from .pkl
         @param pkl_path path to .pkl file, or None if no pickle
@@ -178,6 +175,9 @@ class ContextEmbeddings:
         @param ft_path path to pretrained fastText model
         @param subtract_context boolean, whether to subtract context from target when calculating representations
         @param bert_cls boolean, whether to use BERT 'CLS' token
+
+        This method populates self.embedding_representation with the vector representations
+        from one chosen embedding model.
         """
         self.embedding_type = embedding_type
         self.subtract_context = subtract_context
@@ -201,6 +201,9 @@ class ContextEmbeddings:
             self.get_elmo_representations()
 
     def get_ft_representations(self):
+        """
+        Get fastText representations of contexts.
+        """
         sentence_vecs = []
 
         ft_model = fastText.FastText.load_model(self.ft_path)
@@ -226,6 +229,9 @@ class ContextEmbeddings:
         self.num_contexts = vec_df.shape[0]
 
     def get_elmo_representations(self):
+        """
+        Get ELMo representations of contexts.
+        """
         elmo = ElmoEmbedder()
         sentence_vecs = []
 
@@ -260,10 +266,6 @@ class ContextEmbeddings:
             For each word, average hidden layer vectors together.
             Then multiply by word's tf-idf weight to get weighted word vector.
             Average all weighted word vectors to compute sentence representation.
-
-        Returns:
-            dataframe with each context (as a row) and its vector representation
-            (cols = dimensions of the vec representation)
         """
         raw_bert = get_raw_bert_rep(self.bert_path, self.spacy_contexts)
         sentence_vecs = []
@@ -297,12 +299,12 @@ class ContextEmbeddings:
 
     def decompose_embeddings(self, decomp_method, decomp_dims, additional_params={}):
         """
-        Decompose raw word embeddings into lower-dimensional representation.
-
         @param decomp_method decomposition method, one of {PCA, TSNE, UMAP}
         @param decomp_dims number of dimensions after decomposition
         @param additional_params {param_name: value} of parameters accepted by the sklearn decomposition function.
             Cannot include n_components.
+
+        Decompose raw word embeddings into lower-dimensional representation.
         """
         self.decomp_method = decomp_method
         self.decomp_dims = decomp_dims
@@ -336,13 +338,13 @@ class ContextEmbeddings:
         additional_params={"random_state": 0},
     ):
         """
-        Predicts cluster assignments for data points on raw or decomposed embedding representations.
-
         @param cluster_method clustering method, one of {KMeans, Spectral, GaussianMix, BayesGaussMix}
         @param num_clusters number of clusters
         @param use_decomposed boolean, whether to use decomposed or raw representations
         @param additional_params {param_name: value} of parameters accepted by the sklearn clustering function.
             Cannot include n_components.
+
+        Predicts cluster assignments for data points on raw or decomposed embedding representations.
         """
         self.cluster_method = cluster_method
         self.num_clusters = num_clusters

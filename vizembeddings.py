@@ -40,6 +40,8 @@ from transformembeddings import ContextEmbeddings
 def plot_decomposed_embeddings(ce_object):
     """
     @param ce_object ContextEmbeddings object
+
+    Plots the embedding representation (decomposed to 2 dimensions)
     """
     if ce_object.decomp_dims == 2:
         fig, ax = plt.subplots(figsize=(10, 8))
@@ -119,8 +121,7 @@ def print_cluster_examples(ce_object, num_print=10):
     @param ce_object ContextEmbeddings object
     @param num_print (max) number of contexts to print per cluster
 
-    Returns:
-    prints example word contexts per cluster/dimension
+    Prints example word contexts per cluster/dimension
     """
     if ce_object.decomp_method:
         decomposed = ce_object.decomposed_embedding_representation
@@ -142,10 +143,8 @@ def print_cluster_examples(ce_object, num_print=10):
 def plot_labeled_data(ce_object):
     """
     @param ce_object ContextEmbeddings object
-    Plots decomposed data in 2D with colors representing hand labeled clusters
 
-    Returns:
-    Plots interactive figure with points colored by hand-coded label
+    Plots decomposed data in 2D with colors representing hand labeled clusters
     """
     if not ce_object.true_labels:
         print("Can't plot without true data labels!")
@@ -187,6 +186,7 @@ def plot_labeled_data(ce_object):
 def evaluate_cluster_quality(ce_object):
     """
     @param ce_object ContextEmbeddings object
+
     Given ground truth labels, performs clustering of vector representations of a word
     (after optionally decomposing vector representations) and compares predicted and true labels.
     """
@@ -260,8 +260,7 @@ def get_centroids(ce_object):
     Given hand labeled cluster assignments (optionally decomposed), return cluster centroid.
     Helper function to be called in find_contexts_neighboring_centroid()
 
-    Returns:
-    numpy array of representations of centroids
+    Returns numpy array of representations of centroids
     """
 
     if ce_object.decomp_method:
@@ -323,12 +322,11 @@ def rank_words_near_centroid(ce_object, num_words, tf_idf_weight=False):
     @param num_words number of words to print near each centroid
     @param tf_idf_weight weight the tokens for ranking, default is False
 
-    Returns:
-    centroids_top_words is a Dict{
+    Returns: centroids_top_words, a Dict{
         keys = centroid numbers,
         values = dataframe of words near that centroid in descending order}
 
-    Excludes punctuation and stopwords
+    Excludes punctuation and stopwords.
     """
 
     contexts_near_centroids, context_near_centroids_tf_idf_dicts = find_contexts_neighboring_centroid(
@@ -376,6 +374,8 @@ def print_centroid_top_words(ce_object, centroid_num=None, num_words=5):
     @param ce_object ContextEmbeddings object
     @param centroid the centroid for which the top words will be obtained. If none, print for all centroids.
     @param num_words number of words to return, default is 5
+
+    Prints the top words nearest to cluster centroid(s).
     """
     centroids_top_words = rank_words_near_centroid(ce_object)
     if centroid_num:
@@ -403,8 +403,7 @@ def compare_silhouettes(ce_object, cluster_method, cluster_values, use_decompose
     @param cluster_values values of k for clustering
     @param use_decomposed use decomposed instead of raw representations
 
-    Comparing silhouette scores across
-    multiple ContextEmbeddings objects
+    Compares silhouette scores across multiple ContextEmbeddings objects
     """
 
     if use_decomposed:

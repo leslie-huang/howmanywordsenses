@@ -49,7 +49,6 @@ class Contexts:
         @param randomized retrieve random contexts from the database
 
         This method sets all attributes related to selecting raw word contexts from the corpus.
-        Its side effect is to populate self.contexts
         """
         nlp = spacy.load("en_core_web_sm")
 
@@ -108,9 +107,8 @@ class Contexts:
         @param utterance document as str
         @param word target word
 
-        Returns:
-            list of sentences (str) that contain the word
-            Returns [] if word not found properly in sentence
+        Returns list of sentences (str) that contain the word
+        Returns [] if word not found properly in sentence
         """
         doc_sentences = [sent for sent in sent_tokenize(utterance)]
 
@@ -132,10 +130,9 @@ class Contexts:
         @param word target word
         @param window_size window +/- word to capture
 
-        Returns:
-            List of str (word in context). If word occurs multiple times in text,
-            all occurrences will be in list
-            Returns [] if word not found properly in sentence
+        Returns List of str (word in context). If word occurs multiple times in text,
+        all occurrences will be in list.
+        Returns [] if word not found properly in sentence
         """
         with nlp.disable_pipes("tagger", "ner", "parser"):
             spacy_doc = nlp(utterance)
@@ -157,6 +154,7 @@ class Contexts:
 
     def save_contexts_json(self, filename):
         """
+        @param filename file name ending in .json
         Save the word contexts to a json with columns ["cluster", "context"]
         """
         with open(filename, "w") as f:
