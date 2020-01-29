@@ -204,7 +204,6 @@ pybind11==2.3.0
 pycodestyle==2.4.0
 pycosat==0.6.3
 pycparser==2.18
-pycrypto==2.6.1
 pycurl==7.43.0.2
 pydotplus==2.0.2
 pyflakes==2.0.0
