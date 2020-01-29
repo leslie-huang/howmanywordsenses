@@ -153,34 +153,26 @@ def plot_labeled_data(ce_object):
         print("Can't plot in higher than 2D!")
 
     color_labels = [
-        "red" if i == 1 else "green" if i == 0 else "blue"
+        "orange" if i == 1 else "blue" if i == 0 else "red"
         for i in ce_object.true_labels
     ]
 
-    decomp_df = pd.DataFrame(ce_object.decomposed_embedding_representation)
-    decomp_df.columns = ["dim1", "dim2"]
-    decomp_df["color"] = color_labels
+    marker_labels = [
+        "o" if i == 1 else "s" if i == 0 else "v" for i in ce_object.true_labels
+    ]
+
+    decomp_array = ce_object.decomposed_embedding_representation
 
     fig, ax = plt.subplots(figsize=(10, 8))
 
-    scatter = ax.scatter(
-        decomp_df["dim1"],
-        decomp_df["dim2"],
-        c=decomp_df["color"],
-        alpha=0.5,
-        cmap=plt.cm.jet,
-    )
+    for (marker, color, point) in zip(marker_labels, color_labels, decomp_array):
+        ax.plot(point[0], point[1], marker=marker, color=color)
 
     ax.set_title(
         f"2D {ce_object.decomp_method} for contexts of '{ce_object.word}'", size=20
     )
-
-    labels = [ce_object.contexts[i] for i in range(decomp_df.shape[0])]
-    tooltip = mpld3.plugins.PointLabelTooltip(scatter, labels=labels)
-    mpld3.plugins.connect(fig, tooltip)
-
-    mpld3.save_html(fig, "plot.html")
-    mpld3.enable_notebook()
+    plt.savefig("plt.pdf")
+    plt.show()
 
 
 def evaluate_cluster_quality(ce_object):

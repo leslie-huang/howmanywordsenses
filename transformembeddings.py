@@ -45,15 +45,14 @@ class ContextEmbeddings:
         drop_punct=False,
         bert_cls=False,
     ):
-    """
-    @param ContextsObj a Contexts object
-    @param tf_idf_weighting boolean, whether to apply tf-idf weighting in calculating representations
-    @param mask_pct percent of random masking. None if no masking
-    @param exclude_word boolean, whether to exclude target word from the contexts
-    @param drop_punct boolean, whether to drop punctuation from contexts
-    @param bert_cls boolean, whether to use BERT 'CLS' token
-    """
-
+        """
+        @param ContextsObj a Contexts object
+        @param tf_idf_weighting boolean, whether to apply tf-idf weighting in calculating representations
+        @param mask_pct percent of random masking. None if no masking
+        @param exclude_word boolean, whether to exclude target word from the contexts
+        @param drop_punct boolean, whether to drop punctuation from contexts
+        @param bert_cls boolean, whether to use BERT 'CLS' token
+        """
         self.word = ContextsObj.word
         self.num_contexts = ContextsObj.num_contexts
         self.contexts = ContextsObj.contexts  # the full contexts
@@ -165,7 +164,7 @@ class ContextEmbeddings:
         bert_path=None,
         ft_path=None,
         subtract_context=False,
-        bert_cls = False
+        bert_cls=False,
     ):
         """
         @param embedding_type embedding model to use, one of {BERT, ELMO, fastText}
