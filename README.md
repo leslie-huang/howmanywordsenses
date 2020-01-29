@@ -10,11 +10,11 @@ This repository contains code for unsupervised estimation of the number of word 
 
 For a big-picture overview of what we did, [read our post on Medium](https://medium.com/@leslie_huang/automatic-extraction-of-word-senses-from-deep-contextualized-word-embeddings-2f09f16e820).
 
-# ⚠️ Warning: this code is in alpha mode. ⚠️
+# ⚠️ Warning: this code runs but is messy research code. ⚠️
 
 For a demo, see the `Mouse_labeled_example.ipynb`, which demonstrates how to extract contexts, compute the vector representations, and visualize the results with contexts of the word "mouse."
 
-Code in the modules functions; however, because these experiments yielded a null result, the modules are not "camera ready."
+Code in the modules will run; however, because these experiments yielded a null result, the modules are not "camera ready."
 
 ## Contents
 
