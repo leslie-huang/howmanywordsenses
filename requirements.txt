@@ -194,7 +194,7 @@ preshed==2.0.1
 prometheus-client==0.5.0
 prompt-toolkit==1.0.15
 protobuf==3.9.1
-psutil==5.4.7
+psutil==5.6.6
 ptyprocess==0.6.0
 py==1.8.0
 pyOpenSSL==18.0.0
