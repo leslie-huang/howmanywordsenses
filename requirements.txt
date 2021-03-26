@@ -13,7 +13,7 @@ PyDictionary==1.5.2
 PyMySQL==0.8.0
 PySocks==1.6.8
 PyWavelets==1.0.0
-PyYAML==5.1
+PyYAML==5.4
 Pygments==2.4.2
 QtAwesome==0.4.4
 QtPy==1.5.0
