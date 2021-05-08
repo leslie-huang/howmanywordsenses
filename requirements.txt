@@ -3,7 +3,7 @@ Babel==2.7.0
 Bottleneck==1.2.1
 Click==7.0
 Cython==0.28.5
-Flask-Cors==3.0.8
+Flask-Cors==3.0.9
 Flask==1.1.1
 Jinja2==2.11.3
 Mako==1.0.7
