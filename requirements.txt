@@ -139,7 +139,7 @@ lda==1.0.5
 ldap3==2.5.1
 llvmlite==0.29.0
 locket==0.2.0
-lxml==4.6.3
+lxml==4.6.5
 matlab-kernel==0.16.1
 matplotlib==3.1.1
 mccabe==0.6.1
