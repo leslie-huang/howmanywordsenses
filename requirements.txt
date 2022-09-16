@@ -6,7 +6,7 @@ Cython==0.28.5
 Flask-Cors==3.0.9
 Flask==1.1.1
 Jinja2==2.11.3
-Mako==1.0.7
+Mako==1.2.2
 MarkupSafe==1.1.1
 Pillow==8.3.2
 PyDictionary==1.5.2
